@@ -39,6 +39,7 @@ RUN mkdir /home/developer/.PyCharm \
 
 CMD [ "/opt/pycharm/bin/pycharm.sh" ]
 # Pycharm should work at this point but you will need to have X-windows configured.
-# If your docker container already has X-windows - it should work reasonably well,
+# If the machine that has Docker installed on it already has X-windows - it should work reasonably well,
 # but you will probably have to edit $DISPLAY. If you are running Docker on a Mac
-# you will need to install XQuartz, the X-window lib for Mac
+# you will need to install XQuartz, the X-window lib for Mac. See the instructions in
+# the run_docker_python_dev_env.sh script
