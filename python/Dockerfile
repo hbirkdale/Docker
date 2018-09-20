@@ -1,18 +1,28 @@
-FROM debian
+FROM debian:stretch
 
 LABEL maintainer "Hank Birkdale <hank.birkdale@gmail.com>"
 # The Pycharm section was originally developed by  Viktor Adam <rycus86@gmail.com>"
 # and can be found at https://hub.docker.com/r/rycus86/pycharm/~/dockerfile/
 
-# Install Python
+# Install xfce4 and Python for Debian
 RUN apt-get update && apt-get install --no-install-recommends -y \
+  wget \
+  bzip2 \
   python python-dev python-setuptools python-pip \
   python3 python3-dev python3-setuptools python3-pip \
   gcc git openssh-client \
   libxtst-dev libxext-dev libxrender-dev libfreetype6-dev \
   libfontconfig1 \
+  xfce4 dbus-x11 \
   && rm -rf /var/lib/apt/lists/*
-# End Install Python
+###############################################
+
+### Install Firefox
+RUN wget -O FirefoxSetup.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=en-US"
+RUN mkdir /opt/firefox
+RUN tar xvjf FirefoxSetup.tar.bz2 -C /opt/firefox/
+# RUN ln -s /opt/firefox/firefox/firefox /usr/lib/firefox-esr/firefox-esr
+################################################################################
 
 # Install and configure Pycharm
 ARG pycharm_source=https://download-cf.jetbrains.com/python/pycharm-community-2017.2.2.tar.gz
@@ -37,8 +47,11 @@ ENV HOME /home/developer
 RUN mkdir /home/developer/.PyCharm \
   && ln -sf /home/developer/.PyCharm /home/developer/$pycharm_local_dir
 
-CMD [ "/opt/pycharm/bin/pycharm.sh" ]
-# Pycharm should work at this point but you will need to have X-windows configured.
+### Start the desktop. If on a Mac you will need Quartz running already
+CMD startxfce4
+
+# CMD [ "/opt/pycharm/bin/pycharm.sh" ]
+# Pycharm (or the desktop) should work at this point but you will need to have X-windows configured.
 # If the machine that has Docker installed on it already has X-windows - it should work reasonably well,
 # but you will probably have to edit $DISPLAY. If you are running Docker on a Mac
 # you will need to install XQuartz, the X-window lib for Mac. See the instructions in
